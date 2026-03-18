@@ -1,54 +1,42 @@
 package com.project.back_end.services;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-
 import com.project.back_end.models.Prescription;
-import com.project.back_end.repo.PrescriptionRepository;
+import com.project.back_end.repositories.PrescriptionRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PrescriptionService {
+    @Autowired
+    private PrescriptionRepository prescriptionRepository;
 
-    private final PrescriptionRepository prescriptionRepository;
-
-    public PrescriptionService(PrescriptionRepository prescriptionRepository) {
-        this.prescriptionRepository = prescriptionRepository;
+    public List<Prescription> getAllPrescriptions() {
+        return prescriptionRepository.findAll();
     }
 
-    public ResponseEntity<?> savePrescription(Prescription prescription) {
-        try {
-            List<Prescription> existing = prescriptionRepository.findByAppointmentId(prescription.getAppointmentId());
-            if (!existing.isEmpty()) {
-                Map<String, String> response = new HashMap<>();
-                response.put("message", "Prescription already exists for this appointment");
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-            }
-            prescriptionRepository.save(prescription);
-            Map<String, String> response = new HashMap<>();
-            response.put("message", "Prescription saved successfully");
-            return ResponseEntity.status(HttpStatus.CREATED).body(response);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error saving prescription: " + e.getMessage());
-        }
+    public Optional<Prescription> getPrescriptionById(String id) {
+        return prescriptionRepository.findById(id);
     }
 
-    public ResponseEntity<?> getPrescription(Long appointmentId) {
-        try {
-            List<Prescription> prescriptions = prescriptionRepository.findByAppointmentId(appointmentId);
-            if (!prescriptions.isEmpty()) {
-                Map<String, Object> response = new HashMap<>();
-                response.put("prescription", prescriptions.get(0));
-                return ResponseEntity.ok(response);
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No prescription found for this appointment");
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error fetching prescription: " + e.getMessage());
-        }
+    public List<Prescription> getPrescriptionsByPatientId(Long patientId) {
+        return prescriptionRepository.findByPatientId(patientId);
+    }
+
+    public List<Prescription> getPrescriptionsByDoctorId(Long doctorId) {
+        return prescriptionRepository.findByDoctorId(doctorId);
+    }
+
+    public Prescription getPrescriptionByAppointmentId(Long appointmentId) {
+        return prescriptionRepository.findByAppointmentId(appointmentId);
+    }
+
+    public Prescription savePrescription(Prescription prescription) {
+        return prescriptionRepository.save(prescription);
+    }
+
+    public void deletePrescription(String id) {
+        prescriptionRepository.deleteById(id);
     }
 }

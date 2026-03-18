@@ -1,61 +1,38 @@
 package com.project.back_end.services;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.project.back_end.models.Appointment;
-import com.project.back_end.repo.AppointmentRepository;
+import com.project.back_end.repositories.AppointmentRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AppointmentService {
+    @Autowired
+    private AppointmentRepository appointmentRepository;
 
-    private final AppointmentRepository appointmentRepository;
-
-    public AppointmentService(AppointmentRepository appointmentRepository) {
-        this.appointmentRepository = appointmentRepository;
-    }
-
-    @Transactional
-    public int bookAppointment(Appointment appointment) {
-
-        try {
-            appointmentRepository.save(appointment);
-            return 1;
-        } catch (Exception e) {
-            return 0;
-        }
-    }
-
-    @Transactional(readOnly = true)
-    public List<Appointment> getAppointments() {
+    public List<Appointment> getAllAppointments() {
         return appointmentRepository.findAll();
     }
 
-    @Transactional(readOnly = true)
-    public List<Appointment> getAppointmentsByDoctorAndDate(Long doctorId, LocalDate date) {
-
-        LocalDateTime start = date.atStartOfDay();
-        LocalDateTime end = date.atTime(23, 59, 59);
-
-        return appointmentRepository.findByDoctorIdAndAppointmentTimeBetween(
-                doctorId,
-                start,
-                end
-        );
+    public Optional<Appointment> getAppointmentById(Long id) {
+        return appointmentRepository.findById(id);
     }
 
-    @Transactional
-    public int cancelAppointment(Long id) {
+    public List<Appointment> getAppointmentsByPatientId(Long patientId) {
+        return appointmentRepository.findByPatientId(patientId);
+    }
 
-        if (!appointmentRepository.existsById(id)) {
-            return -1;
-        }
+    public List<Appointment> getAppointmentsByDoctorId(Long doctorId) {
+        return appointmentRepository.findByDoctorId(doctorId);
+    }
 
+    public Appointment saveAppointment(Appointment appointment) {
+        return appointmentRepository.save(appointment);
+    }
+
+    public void deleteAppointment(Long id) {
         appointmentRepository.deleteById(id);
-        return 1;
     }
 }

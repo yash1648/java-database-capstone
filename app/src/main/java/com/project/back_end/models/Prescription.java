@@ -1,85 +1,44 @@
 package com.project.back_end.models;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Document(collection = "prescriptions")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Prescription {
-
     @Id
     private String id;
-
-    @NotNull
-    @Size(min = 3, max = 100)
-    private String patientName;
-
-    @NotNull
     private Long appointmentId;
-
-    @NotNull
-    @Size(min = 3, max = 100)
-    private String medication;
-
-    @NotNull
-    private String dosage;
-
-    @Size(max = 200)
+    private Long patientId;
+    private Long doctorId;
+    private List<Medication> medications;
     private String doctorNotes;
+    private List<Attachment> attachments;
+    private List<String> tags;
+    private LocalDateTime createdAt;
 
-    public Prescription() {
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Medication {
+        private String name;
+        private String dosage;
+        private String frequency;
+        private String duration;
     }
 
-    public Prescription(String patientName, Long appointmentId, String medication, String dosage, String doctorNotes) {
-        this.patientName = patientName;
-        this.appointmentId = appointmentId;
-        this.medication = medication;
-        this.dosage = dosage;
-        this.doctorNotes = doctorNotes;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public String getPatientName() {
-        return patientName;
-    }
-
-    public void setPatientName(String patientName) {
-        this.patientName = patientName;
-    }
-
-    public Long getAppointmentId() {
-        return appointmentId;
-    }
-
-    public void setAppointmentId(Long appointmentId) {
-        this.appointmentId = appointmentId;
-    }
-
-    public String getMedication() {
-        return medication;
-    }
-
-    public void setMedication(String medication) {
-        this.medication = medication;
-    }
-
-    public String getDosage() {
-        return dosage;
-    }
-
-    public void setDosage(String dosage) {
-        this.dosage = dosage;
-    }
-
-    public String getDoctorNotes() {
-        return doctorNotes;
-    }
-
-    public void setDoctorNotes(String doctorNotes) {
-        this.doctorNotes = doctorNotes;
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Attachment {
+        private String fileName;
+        private String fileType;
     }
 }

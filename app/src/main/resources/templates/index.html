@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital CMS - Select Role</title>
+    <link rel="icon" th:href="@{/assets/images/logo/logo.png}">
+    <link rel="stylesheet" th:href="@{/assets/css/index.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/style.css}">
+    <script th:src="@{/js/util.js}" defer></script>
+    <script th:src="@{/js/render.js}" defer></script>
+    <script th:src="@{/js/components/header.js}" defer></script>
+    <script th:src="@{/js/components/footer.js}" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="wrapper">
+            <div id="header"></div>
+            <main class="main-content">
+                <h1>Select Your Role</h1>
+                <div class="role-selection">
+                    <button id="adminLogin" class="role-btn">Admin</button>
+                    <button id="patientBtn" class="role-btn" onclick="selectRole('patient')">Patient</button>
+                    <button id="doctorLogin" class="role-btn">Doctor</button>
+                </div>
+            </main>
+            <div id="footer"></div>
+        </div>
+    </div>
+
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <script type="module" th:src="@{/js/services/index.js}" defer></script>
+</body>
+</html>

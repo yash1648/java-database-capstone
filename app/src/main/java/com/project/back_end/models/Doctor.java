@@ -1,94 +1,44 @@
 package com.project.back_end.models;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "doctors")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Doctor {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
-    @Size(min = 3, max = 100)
-    private String name;
+    @Column(name = "first_name", nullable = false)
+    private String firstName;
 
-    @NotNull
-    @Size(min = 3, max = 50)
-    private String specialty;
+    @Column(name = "last_name", nullable = false)
+    private String lastName;
 
-    @NotNull
-    @Email
-    @Column(unique = true)
+    @Column(nullable = false)
+    private String specialization;
+
+    @Column(unique = true, nullable = false)
     private String email;
 
-    @NotNull
-    @Size(min = 6)
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private String password;
-
-    @NotNull
-    @Pattern(regexp = "^[0-9]{10}$")
+    @Column(nullable = false)
     private String phone;
 
-    @ElementCollection
-    private List<String> availableTimes;
+    @Column(name = "clinic_location")
+    private String clinicLocation;
 
-    public Doctor() {
-    }
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getSpecialty() {
-        return specialty;
-    }
-
-    public void setSpecialty(String specialty) {
-        this.specialty = specialty;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public List<String> getAvailableTimes() {
-        return availableTimes;
-    }
-
-    public void setAvailableTimes(List<String> availableTimes) {
-        this.availableTimes = availableTimes;
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
     }
 }
