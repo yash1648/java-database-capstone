@@ -1,5 +1,6 @@
 package com.project.back_end.services;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,11 +19,17 @@ public class DoctorService {
         this.doctorRepository = doctorRepository;
     }
 
+    /**
+     * Get all doctors
+     */
     @Transactional(readOnly = true)
     public List<Doctor> getDoctors() {
         return doctorRepository.findAll();
     }
 
+    /**
+     * Save new doctor
+     */
     @Transactional
     public int saveDoctor(Doctor doctor) {
 
@@ -34,6 +41,9 @@ public class DoctorService {
         return 1;
     }
 
+    /**
+     * Update doctor
+     */
     @Transactional
     public int updateDoctor(Doctor doctor) {
 
@@ -47,6 +57,9 @@ public class DoctorService {
         return 1;
     }
 
+    /**
+     * Delete doctor
+     */
     @Transactional
     public int deleteDoctor(Long id) {
 
@@ -58,4 +71,34 @@ public class DoctorService {
         return 1;
     }
 
+    /**
+     * Validate doctor login credentials
+     */
+    @Transactional(readOnly = true)
+    public Doctor validateDoctor(String email, String password) {
+
+        Doctor doctor = doctorRepository.findByEmail(email);
+
+        if (doctor != null && doctor.getPassword().equals(password)) {
+            return doctor;
+        }
+
+        return null;
+    }
+
+    /**
+     * Get available time slots for a doctor on a given date
+     * (basic implementation returning stored availableTimes)
+     */
+    @Transactional(readOnly = true)
+    public List<String> getDoctorAvailability(Long doctorId, LocalDate date) {
+
+        Optional<Doctor> doctor = doctorRepository.findById(doctorId);
+
+        if (doctor.isEmpty()) {
+            return null;
+        }
+
+        return doctor.get().getAvailableTimes();
+    }
 }

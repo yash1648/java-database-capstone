@@ -10,23 +10,32 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Step 1: Checkout the repository
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      # Step 2: Setup Java environment
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
 
+      # Step 3: Cache Maven dependencies to speed up builds
       - name: Cache Maven Dependencies
         uses: actions/cache@v4
         with:
           path: ~/.m2
           key: maven-${{ hashFiles('**/pom.xml') }}
 
-      - name: Run Checkstyle
-        run: mvn checkstyle:check
+      # Step 4: Navigate to backend directory (if project is inside /app)
+      - name: Navigate to backend directory
+        run: cd app
 
+      # Step 5: Run Checkstyle for code linting
+      - name: Run Checkstyle
+        run: ./mvnw checkstyle:check
+
+      # Step 6: Compile backend using Maven Wrapper
       - name: Compile Backend
-        run: mvn clean compile
+        run: ./mvnw clean compile

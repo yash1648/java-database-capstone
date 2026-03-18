@@ -1,5 +1,7 @@
 package com.project.back_end.services;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -31,6 +33,19 @@ public class AppointmentService {
     @Transactional(readOnly = true)
     public List<Appointment> getAppointments() {
         return appointmentRepository.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Appointment> getAppointmentsByDoctorAndDate(Long doctorId, LocalDate date) {
+
+        LocalDateTime start = date.atStartOfDay();
+        LocalDateTime end = date.atTime(23, 59, 59);
+
+        return appointmentRepository.findByDoctorIdAndAppointmentTimeBetween(
+                doctorId,
+                start,
+                end
+        );
     }
 
     @Transactional

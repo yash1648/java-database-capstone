@@ -1,6 +1,6 @@
-import { getDoctors, filterDoctors, saveDoctor } from "./doctorService.js";
-import { createDoctorCard } from "./doctorCard.js";
-import { openModal, closeModal } from "./modal.js";
+import { getDoctors, filterDoctors, saveDoctor } from "./services/doctorServices.js";
+import { createDoctorCard } from "./components/doctorCard.js";
+import { openModal, closeModal } from "./components/modals.js";
 
 const content = document.getElementById("content");
 const searchBar = document.getElementById("searchBar");
